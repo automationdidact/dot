@@ -1,0 +1,104 @@
+#+TITLE:         automationdidact’s Dotfiles
+#+AUTHOR:        Aaron Miller
+#+EMAIL:         aaron@automationdidact.com
+#+DESCRIPTION:   Literate Dotfiles via Org-Mode
+
+#+PROPERTY: header-args :comments no :mkdirp yes
+
+* 
+** Inspiration and Gratitudes
+https://github.com/pniedzielski/dotfiles-ng
+https://github.com/howardabrams/dot-files
+https://dotfiles.github.io
+
+* Bash
+:PROPERTIES:
+:header-args: :tangle ~/.bash_aliases
+:END:
+The header property above means I don't have to specify the tangle
+path each and every time
+
+All my custom bash additions go in the bash_aliases file. This way I
+can keep the =.bashrc= file clean and pure and I do not need to ever
+manage or include it in my literate configurations.
+#+caption: Source listing for ~/.bash_aliases.
+
+My alias list goes here in it's own block so that I know all my
+terminal shortcuts at a glance
+#+begin_src conf :noweb yes
+alias ..='cd ..'
+alias c='clear'
+alias hgrep='history | grep'
+alias srbsh='source ~/.bashrc'
+alias aws?='aws sts get-caller-identity'
+alias tf='terraform'
+alias gst='git status'
+alias ggp='git push'
+alias gfp='git pull'
+alias ga='git add'
+alias gb='git branch'
+alias gl='git log'
+alias gcmsg='git commit -m'
+alias gco='git checkout'
+
+alias em="emacsclient -t -a ''"
+#+end_src
+
+This next block activates mise for me so that the tools I install
+using it are available in my path.
+#+begin_src conf :noweb yes
+  eval "$(mise activate bash)"
+#+end_src
+
+Now I add customisations to my path. This is necessary as some tools
+such as proton-pass cli are using a =.local= path.
+
+#+begin_src conf :noweb yes
+  export PATH="/home/aaron/.local/bin:$PATH"
+#+end_src
+
+This is specific to proton pass so I can use it as my SSH Key manager
+#+begin_src conf :noweb yes 
+ SSH_AUTH_SOCK="$HOME/.ssh/proton-pass-agent.sock" ssh-add -l
+#+end_src
+
+* Emacs
+* Git
+#+caption: Source listing for ~/.gitconfig.
+#+begin_src conf   :tangle ~/.gitconfig   :noweb yes
+  <<git-config>>
+#+end_src
+#+begin_src conf   :noweb-ref git-config   :noweb-sep "\n"   :exports none
+[user]
+	name = Aaron Nathan Miller
+	email = aaron@automationdidact.com
+#+end_src
+
+#+begin_src conf :noweb-ref git-config
+  [init]
+	defaultBranch = main
+#+end_src
+* Mise
+:PROPERTIES:
+:header-args: :tangle ~/.config/mise/config.toml
+:END:
+
+#+begin_src conf
+[tools]
+  carapace = "latest"
+  deno = "latest"
+  github-cli = "latest"
+  nu = "latest"
+  #node = "22"
+  #"npm:@anthropic-ai/claude-code" = "latest"
+  powershell = "latest"
+  "pypi:yt-dlp" = { version = "latest", extras = "default,curl-cffi" }
+  ruby = "3"
+  starship = "latest"
+  terraform = "latest"
+  usage = "latest"
+
+  [settings]
+  idiomatic_version_file_enable_tools = []
+
+#+end_src
